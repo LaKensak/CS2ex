@@ -1,0 +1,169 @@
+﻿  Aimbot.cpp
+F:\OIUI\Ex\Aimbot.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'Aimbot.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\Aimbot.cpp(16,39):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<uintptr_t>(DWORD)' en cours de compilation
+          with
+          [
+              T=uintptr_t
+          ]
+  
+F:\OIUI\Ex\Memory.hpp(34,47): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPVOID' d'une taille supérieure
+  (compiler le fichier source 'Aimbot.cpp')
+      F:\OIUI\Ex\Memory.hpp(34,47):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\Aimbot.cpp(119,12):
+          voir la référence à l'instanciation de la fonction modèle 'bool Memory::Write<Vector3>(DWORD,const T &)' en cours de compilation
+          with
+          [
+              T=Vector3
+          ]
+  
+  Config.cpp
+F:\OIUI\Ex\Config.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  dllmain.cpp
+F:\OIUI\Ex\dllmain.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  Entity.cpp
+F:\OIUI\Ex\Entity.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'Entity.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\Entity.cpp(13,22):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<int>(DWORD)' en cours de compilation
+          with
+          [
+              T=int
+          ]
+  
+  ESP.cpp
+F:\OIUI\Ex\ESP.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'ESP.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\ESP.cpp(53,39):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<uintptr_t>(DWORD)' en cours de compilation
+          with
+          [
+              T=uintptr_t
+          ]
+  
+F:\OIUI\Ex\Memory.hpp(39,46): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'ESP.cpp')
+      F:\OIUI\Ex\Memory.hpp(39,46):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\ESP.cpp(60,12):
+          voir la référence à l'instanciation de la fonction modèle 'bool Memory::ReadArray<float>(DWORD,T *,size_t)' en cours de compilation
+          with
+          [
+              T=float
+          ]
+  
+  imgui.cpp
+F:\OIUI\Ex\imgui.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  imgui_demo.cpp
+F:\OIUI\Ex\imgui_demo.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  imgui_draw.cpp
+F:\OIUI\Ex\imgui_draw.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  imgui_impl_dx9.cpp
+F:\OIUI\Ex\imgui_impl_dx9.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  imgui_impl_win32.cpp
+F:\OIUI\Ex\imgui_impl_win32.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  imgui_tables.cpp
+F:\OIUI\Ex\imgui_tables.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  imgui_widgets.cpp
+F:\OIUI\Ex\imgui_widgets.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+  Memory.cpp
+F:\OIUI\Ex\Memory.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.cpp(74,34): warning C4311: 'cast de type' : troncation de pointeur de 'BYTE *' à 'DWORD'
+  NoFlash.cpp
+F:\OIUI\Ex\NoFlash.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'NoFlash.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\NoFlash.cpp(14,39):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<uintptr_t>(DWORD)' en cours de compilation
+          with
+          [
+              T=uintptr_t
+          ]
+  
+F:\OIUI\Ex\Memory.hpp(34,47): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPVOID' d'une taille supérieure
+  (compiler le fichier source 'NoFlash.cpp')
+      F:\OIUI\Ex\Memory.hpp(34,47):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\NoFlash.cpp(25,16):
+          voir la référence à l'instanciation de la fonction modèle 'bool Memory::Write<float>(DWORD,const T &)' en cours de compilation
+          with
+          [
+              T=float
+          ]
+  
+  RadarHack.cpp
+F:\OIUI\Ex\RadarHack.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'RadarHack.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\RadarHack.cpp(14,39):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<uintptr_t>(DWORD)' en cours de compilation
+          with
+          [
+              T=uintptr_t
+          ]
+  
+F:\OIUI\Ex\Memory.hpp(34,47): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPVOID' d'une taille supérieure
+  (compiler le fichier source 'RadarHack.cpp')
+      F:\OIUI\Ex\Memory.hpp(34,47):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\RadarHack.cpp(27,16):
+          voir la référence à l'instanciation de la fonction modèle 'bool Memory::Write<bool>(DWORD,const T &)' en cours de compilation
+          with
+          [
+              T=bool
+          ]
+  
+  SkinChanger.cpp
+F:\OIUI\Ex\SkinChanger.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'SkinChanger.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\SkinChanger.cpp(16,39):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<uintptr_t>(DWORD)' en cours de compilation
+          with
+          [
+              T=uintptr_t
+          ]
+  
+F:\OIUI\Ex\Memory.hpp(34,47): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPVOID' d'une taille supérieure
+  (compiler le fichier source 'SkinChanger.cpp')
+      F:\OIUI\Ex\Memory.hpp(34,47):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\SkinChanger.cpp(73,20):
+          voir la référence à l'instanciation de la fonction modèle 'bool Memory::Write<int>(DWORD,const T &)' en cours de compilation
+          with
+          [
+              T=int
+          ]
+  
+  Triggerbot.cpp
+F:\OIUI\Ex\Triggerbot.cpp(1,1): warning C5210: 'MinHook.h' n'est pas une référence d'unité d'en-tête valide ; ignoré
+F:\OIUI\Ex\Memory.hpp(28,39): warning C4312: 'reinterpret_cast' : la conversion de 'DWORD' en 'LPCVOID' d'une taille supérieure
+  (compiler le fichier source 'Triggerbot.cpp')
+      F:\OIUI\Ex\Memory.hpp(28,39):
+      le contexte d’instanciation du modèle (le plus ancien) est
+          F:\OIUI\Ex\Triggerbot.cpp(16,39):
+          voir la référence à l'instanciation de la fonction modèle 'T Memory::Read<uintptr_t>(DWORD)' en cours de compilation
+          with
+          [
+              T=uintptr_t
+          ]
+  
+  Génération de code en cours...
+  Ex.vcxproj -> F:\OIUI\x64\Release\Ex.dll

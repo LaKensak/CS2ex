@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1a6319e0-8e42-49de-8158-cadbd5adef77}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Ex</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\dxsdk-master\Include;$(ProjectDir)Ex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;MinHook.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\dxsdk-master\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\dxsdk-master\Include;$(ProjectDir)Ex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalHeaderUnitDependencies>MinHook.h;%(AdditionalHeaderUnitDependencies)</AdditionalHeaderUnitDependencies>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;MinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\dxsdk-master\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Le reste du fichier reste inchangé -->
+  <ItemGroup>
+    <!-- Vos fichiers .cpp -->
+    <ClCompile Include="Aimbot.cpp" />
+    <ClCompile Include="Config.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="ESP.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_impl_dx9.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="NoFlash.cpp" />
+    <ClCompile Include="RadarHack.cpp" />
+    <ClCompile Include="SkinChanger.cpp" />
+    <ClCompile Include="Triggerbot.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Vos fichiers .hpp -->
+    <ClInclude Include="Aimbot.hpp" />
+    <ClInclude Include="CheatManager.hpp" />
+    <ClInclude Include="Config.hpp" />
+    <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="ESP.hpp" />
+    <ClInclude Include="F:\CPP\Nouveau dossier\filesystem.hpp" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_impl_dx9.h" />
+    <ClInclude Include="imgui_impl_win32.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="Logger.hpp" />
+    <ClInclude Include="Memory.hpp" />
+    <ClInclude Include="MinHook.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="d3d9.h" />
+    <ClInclude Include="d3dx9.h" />
+    <ClInclude Include="NoFlash.hpp" />
+    <ClInclude Include="Offsets.hpp" />
+    <ClInclude Include="RadarHack.hpp" />
+    <ClInclude Include="SkinChanger.hpp" />
+    <ClInclude Include="Triggerbot.hpp" />
+    <ClInclude Include="Vector.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
