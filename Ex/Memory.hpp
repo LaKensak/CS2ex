@@ -22,20 +22,28 @@ public:
     DWORD GetClientBase() const { return m_dwClientBase; }
     DWORD GetEngineBase() const { return m_dwEngineBase; }
 
+    // Ajout de la méthode IsValidPointer
+    bool IsValidPointer(uintptr_t ptr) const {
+        return ptr != 0 && ptr > 0x10000 && ptr < 0x7FFFFFFFFFFF;
+    }
+
     template<typename T>
     T Read(DWORD address) {
         T value{};
+        if (!IsValidPointer(address)) return value;
         ReadProcessMemory(m_hProcess, reinterpret_cast<LPCVOID>(address), &value, sizeof(T), nullptr);
         return value;
     }
 
     template<typename T>
     bool Write(DWORD address, const T& value) {
+        if (!IsValidPointer(address)) return false;
         return WriteProcessMemory(m_hProcess, reinterpret_cast<LPVOID>(address), &value, sizeof(T), nullptr) != 0;
     }
 
     template<typename T>
     bool ReadArray(DWORD address, T* buffer, size_t count) {
+        if (!IsValidPointer(address)) return false;
         return ReadProcessMemory(m_hProcess, reinterpret_cast<LPCVOID>(address), buffer, sizeof(T) * count, nullptr) != 0;
     }
 };

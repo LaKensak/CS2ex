@@ -1,47 +1,47 @@
 #pragma once
 #include <cstdint>
 
-// Mise à jour: 2025-05-10 (basé sur les offsets de CS2-OFFSETS du 2025-05-10)
+// Offsets mis à jour pour CS2 (dernière version)
 namespace offsets
 {
     namespace signatures {
-        // Offsets mis à jour depuis CS2-OFFSETS
-        constexpr auto dwLocalPlayerController = 0x1A459E0;
-        constexpr auto dwLocalPlayerPawn = 0x184B0D0;
-        constexpr auto dwEntityList = 0x19F6F00;
-        constexpr auto dwViewMatrix = 0x1A5FED0;
-        constexpr auto dwGlowManager = 0x1A5AF20;
-        constexpr auto dwGameRules = 0x1A5B7D8;
-        constexpr auto dwCSGOInput = 0x1A69EF0;
-        constexpr auto dwViewAngles = 0x1A6A2C0;
-        constexpr auto dwPlantedC4 = 0x1A660B8;
-        constexpr auto dwGlobalVars = 0x183F148;
-        constexpr auto dwPrediction = 0x184AF50;
-        constexpr auto dwGameEntitySystem = 0x1B1A718;
+        // Client.dll signatures
+        constexpr auto dwLocalPlayerController = 0x1A459E0;  // Vérifiez dans client_dll.hpp
+        constexpr auto dwLocalPlayerPawn = 0x184B0D0;        // Vérifiez dans client_dll.hpp
+        constexpr auto dwEntityList = 0x19F6F00;             // Vérifiez dans client_dll.hpp
+        constexpr auto dwViewMatrix = 0x1A5FED0;             // Vérifiez dans client_dll.hpp
+        constexpr auto dwGlowManager = 0x1A5AF20;            // Vérifiez dans client_dll.hpp
+        constexpr auto dwGameRules = 0x1A5B7D8;              // Vérifiez dans client_dll.hpp
+        constexpr auto dwCSGOInput = 0x1A69EF0;              // Vérifiez dans client_dll.hpp
+        constexpr auto dwViewAngles = 0x1A6A2C0;             // Vérifiez dans client_dll.hpp
+        constexpr auto dwPlantedC4 = 0x1A660B8;              // Vérifiez dans client_dll.hpp
+        constexpr auto dwGlobalVars = 0x183F148;             // Vérifiez dans client_dll.hpp
+        constexpr auto dwPrediction = 0x184AF50;             // Vérifiez dans client_dll.hpp
+        constexpr auto dwGameEntitySystem = 0x1B1A718;       // Vérifiez dans client_dll.hpp
         constexpr auto dwGameEntitySystem_highestEntityIndex = 0x20F0;
 
-        // Engine2.dll offsets
-        constexpr auto dwNetworkGameClient = 0x540CE0;
+        // Engine2.dll signatures
+        constexpr auto dwNetworkGameClient = 0x540CE0;       // Vérifiez dans engine2_dll.hpp
         constexpr auto dwNetworkGameClient_clientTickCount = 0x368;
         constexpr auto dwNetworkGameClient_deltaTick = 0x27C;
         constexpr auto dwNetworkGameClient_localPlayer = 0xF0;
         constexpr auto dwNetworkGameClient_maxClients = 0x238;
         constexpr auto dwNetworkGameClient_serverTickCount = 0x36C;
         constexpr auto dwNetworkGameClient_signOnState = 0x228;
-        constexpr auto dwWindowHeight = 0x62456C;
-        constexpr auto dwWindowWidth = 0x624568;
+        constexpr auto dwWindowHeight = 0x62456C;            // Vérifiez dans engine2_dll.hpp
+        constexpr auto dwWindowWidth = 0x624568;             // Vérifiez dans engine2_dll.hpp
 
         // InputSystem.dll offsets
         constexpr auto dwInputSystem = 0x387E0;
 
         // SkinChanger Signatures
-        constexpr auto dwItemSchema = 0x173C7D0;
+        constexpr auto dwItemSchema = 0x173C7D0;             // Vérifiez dans client_dll.hpp
         constexpr auto m_bInitialized = 0x3C8;
-        constexpr auto dwForceWeaponUpdate = 0x16C6B80;
+        constexpr auto dwForceWeaponUpdate = 0x16C6B80;      // Vérifiez dans client_dll.hpp
     }
 
     namespace netvars {
-        // Netvar offsets - mis à jour
+        // Netvar offsets - vérifiez dans client_dll.hpp ou server_dll.hpp
         constexpr auto m_iHealth = 0x344;
         constexpr auto m_iTeamNum = 0x3E3;
         constexpr auto m_vecOrigin = 0x88;
@@ -53,8 +53,8 @@ namespace offsets
         constexpr auto m_flFlashDuration = 0x140C;
         constexpr auto m_bDormant = 0xEF;
         constexpr auto m_fFlags = 0x3EC;
-        constexpr auto m_iCrosshairId = 0x1838; // Mis à jour
-        constexpr auto m_dwBoneMatrix = 0x1124; // Mis à jour
+        constexpr auto m_iCrosshairId = 0x11838;
+        constexpr auto m_dwBoneMatrix = 0x1124;
         constexpr auto m_bSpottedByMask = 0xC;
         constexpr auto m_hActiveWeapon = 0x0;
         constexpr auto m_iItemDefinitionIndex = 0x1BA;
@@ -72,12 +72,12 @@ namespace offsets
         constexpr auto m_bIsScoped = 0x23E8;
         constexpr auto m_bGunGameImmunity = 0x13BC;
         constexpr auto m_iClip1 = 0x1678;
-        constexpr auto m_iPrimaryReserveAmmoCount = 0x1680; // Mis à jour
+        constexpr auto m_iPrimaryReserveAmmoCount = 0x1674;
         constexpr auto m_iObserverMode = 0x40;
         constexpr auto m_hObserverTarget = 0x44;
 
-        // Offsets SkinChanger Temporaires 
-        constexpr auto m_hMyWeapons = 0x40; // Offset pour accéder aux armes du joueur
+        // Offsets SkinChanger
+        constexpr auto m_hMyWeapons = 0x40;
         constexpr auto m_AttributeManager = 0xFF0;
         constexpr auto m_Item = 0x50;
         constexpr auto m_iItemIDHigh = 0x1D0;

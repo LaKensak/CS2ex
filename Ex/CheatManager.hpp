@@ -6,133 +6,73 @@
 #include "NoFlash.hpp"
 #include "RadarHack.hpp"
 #include "Triggerbot.hpp"
-#include "Logger.hpp"
-#include <thread>
-#include <atomic>
-#include <chrono>
+#include "Logger.hpp" 
+#include <d3d9.h>
 
 class CheatManager {
 private:
     Memory memory;
-    ESP esp;
+    SkinChanger skinChanger;
     Aimbot aimbot;
+    ESP esp;
+    NoFlash noFlash;
     RadarHack radarHack;
     Triggerbot triggerbot;
-    NoFlash noFlash;
-    SkinChanger skinChanger;
-    std::thread cheatThread;
-    std::atomic<bool> running;
     IDirect3DDevice9* pDevice;
-
-    void CheatLoop() {
-        while (running) {
-            RunFeatures();
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
-        }
-    }
+    bool running;
 
 public:
     CheatManager() :
         memory(),
-        esp(memory),
+        skinChanger(memory),
         aimbot(memory),
+        esp(memory),
+        noFlash(memory),
         radarHack(memory),
         triggerbot(memory),
-        noFlash(memory),
-        skinChanger(memory),
-        running(false),
-        pDevice(nullptr)
-    {
-    }
-
-    ~CheatManager() {
-        Stop();
+        pDevice(nullptr),
+        running(false) {
     }
 
     void SetDevice(IDirect3DDevice9* device) {
         pDevice = device;
-        if (pDevice) {
-            esp.Initialize(pDevice);
-        }
     }
 
     bool Initialize() {
-        Logger::Init();
-        Logger::Log("Initializing cheat...");
-
-        if (!memory.Initialize(L"cs2.exe", L"client.dll", L"engine2.dll")) {
-            Logger::Error("Failed to initialize memory");
-            return false;
-        }
-        Logger::Log("Memory initialized");
-
-        Config::Load("config.json");
-        Logger::Log("Configuration loaded");
-
-        if (!aimbot.Initialize()) {
-            Logger::Error("Failed to initialize aimbot");
+        if (!memory.Initialize(L"cs2.exe")) {
+            Logger::Error("Failed to initialize Memory");
             return false;
         }
 
-        // ESP est initialisé dans SetDevice
-
-        if (!radarHack.Initialize()) {
-            Logger::Error("Failed to initialize radar hack");
-            return false;
-        }
-
-        if (!triggerbot.Initialize()) {
-            Logger::Error("Failed to initialize triggerbot");
-            return false;
-        }
-
-        if (!noFlash.Initialize()) {
-            Logger::Error("Failed to initialize no flash");
-            return false;
-        }
-
-        if (!skinChanger.Initialize()) {
-            Logger::Error("Failed to initialize skin changer");
+        // Initialiser ESP avec le device
+        if (pDevice && !esp.Initialize(pDevice)) {
+            Logger::Error("Failed to initialize ESP");
             return false;
         }
 
         return true;
     }
 
-    void RunFeatures() {
-        if (Config::aimbot.enabled)
-            aimbot.Run();
-
-        // ESP est rendu dans le hook DirectX, pas ici
-
-        if (Config::triggerbot.enabled)
-            triggerbot.Run();
-
-        if (Config::noFlash.enabled)
-            noFlash.Run();
-
-        if (Config::radarHack.enabled)
-            radarHack.Run();
-
-        if (Config::skinChanger.enabled)
-            skinChanger.Run();
-    }
-
     void Start() {
-        if (running) return;
         running = true;
-        cheatThread = std::thread(&CheatManager::CheatLoop, this);
     }
 
     void Stop() {
-        if (!running) return;
         running = false;
-        if (cheatThread.joinable())
-            cheatThread.join();
     }
 
-    void RenderESP() {
-        if (pDevice && Config::esp.enabled) {
+    void RunFeatures() {
+        if (!running) return;
+
+        // Exécuter les fonctionnalités qui ne nécessitent pas de rendu
+        if (Config::skinChanger.enabled) skinChanger.Run();
+        if (Config::aimbot.enabled) aimbot.Run();
+        if (Config::noFlash.enabled) noFlash.Run();
+        if (Config::radarHack.enabled) radarHack.Run();
+        if (Config::triggerbot.enabled) triggerbot.Run();
+
+        // Exécuter les fonctionnalités qui nécessitent un rendu
+        if (Config::esp.enabled && pDevice) {
             esp.Render(pDevice);
         }
     }

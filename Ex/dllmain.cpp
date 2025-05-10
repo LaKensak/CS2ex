@@ -1,35 +1,32 @@
-// Correction pour dllmain.cpp
 #include <Windows.h>
 #include <d3d9.h>
-#include <d3dx9.h>
 #include "MinHook.h"
 #include "imgui.h"
 #include "imgui_impl_dx9.h"
 #include "imgui_impl_win32.h"
 #include "CheatManager.hpp"
 #include "Logger.hpp"
+#include "Config.hpp"
 
-// Déclaration des types de fonctions pour les hooks DirectX
+// Déclarations de types
 typedef HRESULT(APIENTRY* EndScene)(IDirect3DDevice9* pDevice);
-typedef HRESULT(APIENTRY* Reset)(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters);
 typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 // Variables globales
 HWND window = nullptr;
 WNDPROC originalWndProc = nullptr;
 EndScene originalEndScene = nullptr;
-Reset originalReset = nullptr;
 CheatManager cheatManager;
 bool menuOpen = false;
 bool initialized = false;
 
-// Déclaration externe pour ImGui_ImplWin32_WndProcHandler
+// Déclaration externe pour ImGui
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-// Fonction de hook pour WndProc
+// Hook WndProc
 LRESULT CALLBACK hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    // Gérer les entrées ImGui
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+    // Gérer les entrées ImGui si le menu est ouvert
+    if (menuOpen && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
 
     // Ouvrir/fermer le menu avec INSERT
@@ -41,34 +38,24 @@ LRESULT CALLBACK hkWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return CallWindowProc(originalWndProc, hWnd, uMsg, wParam, lParam);
 }
 
-// Fonction de hook pour EndScene
+// Hook EndScene
 HRESULT APIENTRY hkEndScene(IDirect3DDevice9* pDevice) {
     if (!initialized) {
-        Logger::Log("EndScene hook called for the first time");
+        Logger::Log("Initializing ImGui...");
 
-        // Initialiser ImGui
+        // Obtenir le handle de la fenêtre
         D3DDEVICE_CREATION_PARAMETERS params;
         pDevice->GetCreationParameters(&params);
         window = params.hFocusWindow;
 
-        Logger::Log("Window handle obtained: " + std::to_string((uintptr_t)window));
-
-        // Configurer ImGui
+        // Initialiser ImGui
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 
-        if (!ImGui_ImplWin32_Init(window)) {
-            Logger::Error("Failed to initialize ImGui Win32 implementation");
-            return originalEndScene(pDevice);
-        }
-
-        if (!ImGui_ImplDX9_Init(pDevice)) {
-            Logger::Error("Failed to initialize ImGui DX9 implementation");
-            return originalEndScene(pDevice);
-        }
-
-        Logger::Log("ImGui initialized successfully");
+        // Initialiser les implémentations ImGui
+        ImGui_ImplWin32_Init(window);
+        ImGui_ImplDX9_Init(pDevice);
 
         // Configurer le style ImGui
         ImGui::StyleColorsDark();
@@ -82,23 +69,22 @@ HRESULT APIENTRY hkEndScene(IDirect3DDevice9* pDevice) {
             Logger::Log("WndProc hooked successfully");
         }
 
-        // Initialiser le cheat manager avec le device
+        // Initialiser le cheat manager
         cheatManager.SetDevice(pDevice);
-        if (!cheatManager.Initialize()) {
-            Logger::Error("Failed to initialize CheatManager");
-        }
-        else {
+        if (cheatManager.Initialize()) {
             cheatManager.Start();
             Logger::Log("CheatManager started successfully");
         }
+        else {
+            Logger::Error("Failed to initialize CheatManager");
+        }
 
         initialized = true;
+        Logger::Log("Initialization complete");
     }
 
-    // Rendre l'ESP
-    if (Config::esp.enabled && pDevice) {
-        cheatManager.RunFeatures();
-    }
+    // Exécuter les fonctionnalités du cheat
+    cheatManager.RunFeatures();
 
     // Rendre le menu ImGui si ouvert
     if (menuOpen) {
@@ -122,8 +108,6 @@ HRESULT APIENTRY hkEndScene(IDirect3DDevice9* pDevice) {
                 const char* bones[] = { "Head", "Neck", "Chest", "Stomach" };
                 ImGui::Combo("Bone", &Config::aimbot.bone, bones, IM_ARRAYSIZE(bones));
 
-                ImGui::Text("Aimbot Key: %d", Config::aimbot.key);
-
                 ImGui::EndTabItem();
             }
 
@@ -132,10 +116,8 @@ HRESULT APIENTRY hkEndScene(IDirect3DDevice9* pDevice) {
                 ImGui::Checkbox("Enable ESP", &Config::esp.enabled);
                 ImGui::Checkbox("Boxes", &Config::esp.boxes);
                 ImGui::Checkbox("Health Bar", &Config::esp.health);
-                ImGui::Checkbox("Health Text", &Config::esp.healthText);
                 ImGui::Checkbox("Name", &Config::esp.name);
                 ImGui::Checkbox("Snaplines", &Config::esp.snaplines);
-                ImGui::Checkbox("Head Dot", &Config::esp.headDot);
                 ImGui::Checkbox("Team Check", &Config::esp.teamCheck);
                 ImGui::EndTabItem();
             }
@@ -143,16 +125,10 @@ HRESULT APIENTRY hkEndScene(IDirect3DDevice9* pDevice) {
             // Onglet Skins
             if (ImGui::BeginTabItem("Skins")) {
                 ImGui::Checkbox("Enable Skin Changer", &Config::skinChanger.enabled);
-
                 ImGui::InputInt("AK-47 Skin", &Config::skinChanger.ak47Skin);
                 ImGui::InputInt("AWP Skin", &Config::skinChanger.awpSkin);
                 ImGui::InputInt("USP-S Skin", &Config::skinChanger.uspSkin);
                 ImGui::InputInt("Glock-18 Skin", &Config::skinChanger.glockSkin);
-                ImGui::InputInt("Desert Eagle Skin", &Config::skinChanger.deagleSkin);
-                ImGui::InputInt("SSG 08 Skin", &Config::skinChanger.ssgSkin);
-                ImGui::InputInt("M4A4 Skin", &Config::skinChanger.m4a4Skin);
-                ImGui::InputInt("M4A1-S Skin", &Config::skinChanger.m4a1sSkin);
-
                 ImGui::EndTabItem();
             }
 
@@ -169,122 +145,85 @@ HRESULT APIENTRY hkEndScene(IDirect3DDevice9* pDevice) {
     return originalEndScene(pDevice);
 }
 
-// Fonction de hook pour Reset
-HRESULT APIENTRY hkReset(IDirect3DDevice9* pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters) {
-    ImGui_ImplDX9_InvalidateDeviceObjects();
-    HRESULT result = originalReset(pDevice, pPresentationParameters);
-    ImGui_ImplDX9_CreateDeviceObjects();
-    return result;
-}
+// Fonction pour trouver l'adresse de EndScene
+void* FindEndScene() {
+    Logger::Log("Finding EndScene address...");
 
-// Fonction pour obtenir l'adresse de la vtable
-DWORD_PTR GetVTableFunction(const char* moduleName, DWORD vTableIndex) {
-    HMODULE module = GetModuleHandleA(moduleName);
-    if (!module) {
-        Logger::Error("Failed to get module handle for " + std::string(moduleName));
-        return 0;
-    }
+    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, DefWindowProc, 0, 0, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, L"DX", NULL };
+    RegisterClassEx(&wc);
+    HWND hwnd = CreateWindow(L"DX", NULL, WS_OVERLAPPEDWINDOW, 100, 100, 300, 300, NULL, NULL, wc.hInstance, NULL);
 
     IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
     if (!pD3D) {
         Logger::Error("Failed to create D3D9 interface");
-        return 0;
+        return nullptr;
     }
 
     D3DPRESENT_PARAMETERS d3dpp = {};
     d3dpp.Windowed = TRUE;
     d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    d3dpp.hDeviceWindow = GetForegroundWindow();
+    d3dpp.hDeviceWindow = hwnd;
 
-    IDirect3DDevice9* pDevice = nullptr;
-    HRESULT result = pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dpp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDevice);
+    IDirect3DDevice9* pDevice;
+    HRESULT result = pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &pDevice);
 
     if (FAILED(result) || !pDevice) {
         Logger::Error("Failed to create D3D9 device: " + std::to_string(result));
         if (pD3D) pD3D->Release();
-        return 0;
+        DestroyWindow(hwnd);
+        UnregisterClass(L"DX", wc.hInstance);
+        return nullptr;
     }
 
-    void** vTable = *reinterpret_cast<void***>(pDevice);
-    DWORD_PTR address = (DWORD_PTR)vTable[vTableIndex];
+    void* endSceneAddr = (void*)((*(void***)pDevice)[42]); // 42 est l'index de EndScene dans la vtable
+    Logger::Log("EndScene address found: " + std::to_string((uintptr_t)endSceneAddr));
 
     pDevice->Release();
     pD3D->Release();
+    DestroyWindow(hwnd);
+    UnregisterClass(L"DX", wc.hInstance);
 
-    return address;
+    return endSceneAddr;
 }
 
-// Fonction pour installer les hooks DirectX
-bool InstallHooks() {
-    Logger::Log("Installing hooks...");
-
-    // Obtenir l'adresse de la vtable pour EndScene et Reset
-    DWORD_PTR endSceneAddress = GetVTableFunction("d3d9.dll", 42);
-    DWORD_PTR resetAddress = GetVTableFunction("d3d9.dll", 16);
-
-    if (!endSceneAddress || !resetAddress) {
-        Logger::Error("Failed to get DirectX function addresses");
-        return false;
-    }
-
-    Logger::Log("EndScene address: " + std::to_string(endSceneAddress));
-    Logger::Log("Reset address: " + std::to_string(resetAddress));
+// Fonction d'initialisation
+DWORD WINAPI MainThread(LPVOID lpParam) {
+    // Initialiser le logger
+    Logger::Init();
+    Logger::Log("DLL injected successfully");
 
     // Initialiser MinHook
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
         Logger::Error("Failed to initialize MinHook: " + std::to_string(status));
-        return false;
+        return 0;
+    }
+    Logger::Log("MinHook initialized successfully");
+
+    // Trouver l'adresse de EndScene
+    void* endSceneAddr = FindEndScene();
+    if (!endSceneAddr) {
+        Logger::Error("Failed to find EndScene address");
+        return 0;
     }
 
-    Logger::Log("MinHook initialized");
-
-    // Créer les hooks
-    status = MH_CreateHook((LPVOID)endSceneAddress, hkEndScene, (LPVOID*)&originalEndScene);
+    // Créer le hook pour EndScene
+    status = MH_CreateHook(endSceneAddr, hkEndScene, (void**)&originalEndScene);
     if (status != MH_OK) {
         Logger::Error("Failed to create EndScene hook: " + std::to_string(status));
-        return false;
+        return 0;
     }
+    Logger::Log("EndScene hook created successfully");
 
-    Logger::Log("EndScene hook created");
-
-    status = MH_CreateHook((LPVOID)resetAddress, hkReset, (LPVOID*)&originalReset);
+    // Activer le hook
+    status = MH_EnableHook(endSceneAddr);
     if (status != MH_OK) {
-        Logger::Error("Failed to create Reset hook: " + std::to_string(status));
-        return false;
+        Logger::Error("Failed to enable EndScene hook: " + std::to_string(status));
+        return 0;
     }
+    Logger::Log("EndScene hook enabled successfully");
 
-    Logger::Log("Reset hook created");
-
-    // Activer les hooks
-    status = MH_EnableHook(MH_ALL_HOOKS);
-    if (status != MH_OK) {
-        Logger::Error("Failed to enable hooks: " + std::to_string(status));
-        return false;
-    }
-
-    Logger::Log("Hooks enabled successfully");
-    return true;
-}
-
-// Fonction pour désinstaller les hooks
-void UninstallHooks() {
-    Logger::Log("Uninstalling hooks...");
-
-    // Désactiver et supprimer les hooks
-    MH_DisableHook(MH_ALL_HOOKS);
-    MH_Uninitialize();
-
-    if (originalWndProc && window) {
-        SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)originalWndProc);
-    }
-
-    // Nettoyer ImGui
-    ImGui_ImplDX9_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
-
-    Logger::Log("Hooks uninstalled successfully");
+    return 0;
 }
 
 // Point d'entrée de la DLL
@@ -292,12 +231,25 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     switch (ul_reason_for_call) {
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
-        CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)InstallHooks, nullptr, 0, nullptr);
+        CreateThread(nullptr, 0, MainThread, nullptr, 0, nullptr);
         break;
     case DLL_PROCESS_DETACH:
-        cheatManager.Stop();
-        UninstallHooks();
-        Logger::Shutdown();
+        if (initialized) {
+            cheatManager.Stop();
+
+            MH_DisableHook(MH_ALL_HOOKS);
+            MH_Uninitialize();
+
+            if (originalWndProc && window) {
+                SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)originalWndProc);
+            }
+
+            ImGui_ImplDX9_Shutdown();
+            ImGui_ImplWin32_Shutdown();
+            ImGui::DestroyContext();
+
+            Logger::Shutdown();
+        }
         break;
     }
     return TRUE;
