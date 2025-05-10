@@ -1,49 +1,57 @@
 #pragma once
 #include <Windows.h>
-#include <TlHelp32.h>
 #include <cstdint>
+#include <string>
+#include <vector>
+#include <Psapi.h>
 
+// Classe pour gérer l'accès à la mémoire du jeu
 class Memory {
-private:
-    HANDLE m_hProcess;
-    DWORD m_dwProcessId;
-    DWORD m_dwClientBase;
-    DWORD m_dwEngineBase;
-
 public:
-    Memory();
-    ~Memory();
+    // Initialiser les pointeurs et trouver les adresses nécessaires
+    static bool Initialize();
 
-    bool Initialize(const wchar_t* processName, const wchar_t* moduleNameClient = L"client.dll", const wchar_t* moduleNameEngine = L"engine2.dll");
+    // Obtenir l'adresse de base d'un module
+    static uintptr_t GetModuleBaseAddress(const char* moduleName);
 
-    DWORD GetProcessId(const wchar_t* processName);
-    DWORD GetModuleBaseAddress(const wchar_t* moduleName);
-
-    DWORD GetClientBase() const { return m_dwClientBase; }
-    DWORD GetEngineBase() const { return m_dwEngineBase; }
-
-    // Ajout de la méthode IsValidPointer
-    bool IsValidPointer(uintptr_t ptr) const {
-        return ptr != 0 && ptr > 0x10000 && ptr < 0x7FFFFFFFFFFF;
+    // Lire la mémoire à une adresse donnée
+    template <typename T>
+    static T Read(uintptr_t address) {
+        if (address <= 0x10000 || address >= 0x7FFFFFFFFFFF) {
+            return T();
+        }
+        try {
+            return *(T*)address;
+        }
+        catch (...) {
+            return T();
+        }
     }
 
-    template<typename T>
-    T Read(DWORD address) {
-        T value{};
-        if (!IsValidPointer(address)) return value;
-        ReadProcessMemory(m_hProcess, reinterpret_cast<LPCVOID>(address), &value, sizeof(T), nullptr);
-        return value;
+    // Écrire dans la mémoire à une adresse donnée
+    template <typename T>
+    static void Write(uintptr_t address, T value) {
+        if (address <= 0x10000 || address >= 0x7FFFFFFFFFFF) {
+            return;
+        }
+        try {
+            *(T*)address = value;
+        }
+        catch (...) {
+            // Gérer silencieusement les erreurs
+        }
     }
 
-    template<typename T>
-    bool Write(DWORD address, const T& value) {
-        if (!IsValidPointer(address)) return false;
-        return WriteProcessMemory(m_hProcess, reinterpret_cast<LPVOID>(address), &value, sizeof(T), nullptr) != 0;
-    }
+    // Trouver un motif dans un module
+    static uintptr_t FindPattern(const char* module, const char* pattern);
 
-    template<typename T>
-    bool ReadArray(DWORD address, T* buffer, size_t count) {
-        if (!IsValidPointer(address)) return false;
-        return ReadProcessMemory(m_hProcess, reinterpret_cast<LPCVOID>(address), buffer, sizeof(T) * count, nullptr) != 0;
-    }
+    // Trouver une interface du jeu
+    static void* FindInterface(const char* module, const char* interfaceName);
+
+    // Pointeurs vers les structures importantes du jeu
+    static inline uintptr_t ClientBase = 0;
+    static inline uintptr_t EngineBase = 0;
+    static inline void* LocalPlayer = nullptr;
+    static inline void* EntityList = nullptr;
+    static inline void* ViewMatrix = nullptr;
 };
